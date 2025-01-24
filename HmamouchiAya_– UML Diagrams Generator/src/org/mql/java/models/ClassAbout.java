@@ -30,6 +30,7 @@ public class ClassAbout {
         analyzeClass(classLocation);
     }
 
+
     private void initializeLists() {
         fields = new Vector<>();
         methods = new Vector<>();
