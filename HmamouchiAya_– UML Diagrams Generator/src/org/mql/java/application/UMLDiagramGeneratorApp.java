@@ -1,65 +1,56 @@
 package org.mql.java.application;
-
-
-
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.GridLayout;
 import java.util.List;
 import java.util.Map;
 import org.mql.java.models.ClassAbout;
 import org.mql.java.models.PackageAbout;
-import org.mql.java.xml.PackageExplorer;
 import org.mql.java.ui.UMLClassDiagramPanel;
+import org.mql.java.xml.PackageExplorer;
+import org.w3c.dom.Document;
 
 public class UMLDiagramGeneratorApp {
-    private static final String BASE_PACKAGE = "org.mql.java";
-    private static final int FRAME_WIDTH = 1000;
-    private static final int FRAME_HEIGHT = 700;
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(UMLDiagramGeneratorApp::createAndShowGUI);
-    }
-
-    private static void createAndShowGUI() {
-        JFrame frame = initializeFrame();
-        PackageExplorer explorer = new PackageExplorer(BASE_PACKAGE);
-        PackageAbout packageInfo = explorer.analyzePackage();
+    public static void main(String[] args) { 
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("UML Diagram Generator");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(800, 600);
+            
+            String packageName = "org.mql.java";
+            PackageExplorer scanner = new PackageExplorer(packageName);
+            PackageAbout basePackage = scanner.analyzePackage();
+            System.out.println(basePackage);
+            
+            Map<String, List<ClassAbout>> map = scanner.groupClassesByPackage();
+            
+            JPanel parentPanel = new JPanel();
+            parentPanel.setLayout(new GridLayout(0, 2, 200, 200));
+            map.forEach((name, classes) -> {
+                UMLClassDiagramPanel diagramPanel = new UMLClassDiagramPanel(name, classes);
+                diagramPanel.setBorder(BorderFactory.createCompoundBorder(
+                    new LineBorder(Color.BLACK, 2),
+                    new EmptyBorder(10, 10, 10, 10) 
+                ));
+                parentPanel.add(diagramPanel);
+            });
         
-        JPanel diagramContainer = createDiagramContainer(explorer);
-        JScrollPane scrollPane = new JScrollPane(diagramContainer);
-        
-        frame.add(scrollPane);
-        frame.setVisible(true);
-    }
+            JScrollPane scrollPane = new JScrollPane(parentPanel);
+            frame.add(scrollPane);
+            frame.setVisible(true);
+        });  
 
-    private static JFrame initializeFrame() {
-        JFrame frame = new JFrame("UML Diagram Generator");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-        frame.setLocationRelativeTo(null);
-        return frame;
-    }
-
-    private static JPanel createDiagramContainer(PackageExplorer explorer) {
-        Map<String, List<ClassAbout>> packageClassMap = explorer.groupClassesByPackage();
-        
-        JPanel container = new JPanel(new GridLayout(0, 2, 20, 20));
-        packageClassMap.forEach((packageName, classes) -> {
-        	UMLClassDiagramPanel diagramPanel = new UMLClassDiagramPanel(packageName, classes);
-            diagramPanel.setBorder(createPanelBorder());
-            container.add(diagramPanel);
-        });
-        
-        return container;
-    }
-
-    private static CompoundBorder createPanelBorder() {
-        return BorderFactory.createCompoundBorder(
-            new LineBorder(Color.BLACK, 2),
-            new EmptyBorder(10, 10, 10, 10)
-        );
-    }
+        try {
+            PackageAbout rootPackage = new PackageExplorer("org.mql.java").analyzePackage();
+            Document xmlDocument = org.mql.java.xml.XMLGenerator.generateXML(rootPackage);
+            org.mql.java.xml.XMLGenerator.printXML(xmlDocument);
+            
+            PackageAbout mypkg = new org.mql.java.xml.XMLParser("resources/generatedXML/java.xml").parse();
+            System.out.println(mypkg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    } 
 }
