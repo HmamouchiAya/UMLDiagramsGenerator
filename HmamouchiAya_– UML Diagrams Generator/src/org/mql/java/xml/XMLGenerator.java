@@ -127,8 +127,8 @@ public class XMLGenerator {
         createTextElement(doc, interfaceElement, "name", interfaceAbout.getName());
         createTextElement(doc, interfaceElement, "modifiers", interfaceAbout.getModifiers());
         
-        if (interfaceAbout.getSuperClass() != null) {
-            createTextElement(doc, interfaceElement, "extendedClass", interfaceAbout.getSuperClass());
+        if (interfaceAbout.superClass() != null) {
+            createTextElement(doc, interfaceElement, "extendedClass", interfaceAbout.superClass());
         }
         
         Element fieldsElement = createElement(doc, interfaceElement, "fields");
@@ -145,18 +145,18 @@ public class XMLGenerator {
         createTextElement(doc, annotationElement, "retentionPolicy", annotationAbout.getPolicy().toString());
         createTextElement(doc, annotationElement, "hasInherited", String.valueOf(annotationAbout.inheritanceStatus()));
         
-        Element attributesElement = createElement(doc, annotationElement, "attributes");
-        for (Map.Entry<String, String> attribute : annotationAbout.getAttributes().entrySet()) {
-            Element attributeElement = createElement(doc, attributesElement, "attribute");
-            createTextElement(doc, attributeElement, "name", attribute.getKey());
-            createTextElement(doc, attributeElement, "type", attribute.getValue());
+        Element methodPropertiesElement = createElement(doc, annotationElement, "methodProperties");
+        for (Map.Entry<String, String> methodPropertie : annotationAbout.getMethodProperties().entrySet()) {
+            Element methodpropertieElement = createElement(doc, methodPropertiesElement, "methodPropertie");
+            createTextElement(doc, methodpropertieElement, "name", methodPropertie.getKey());
+            createTextElement(doc, methodpropertieElement, "type", methodPropertie.getValue());
         }
     }
 
     private static void createEnumXML(EnumAbout enumAbout, Document doc, Element parentElement) {
         Element enumElement = createElement(doc, parentElement, "enum");
         
-        createTextElement(doc, enumElement, "name", enumAbout.getName());
+        createTextElement(doc, enumElement, "name", enumAbout.getQualifiedName());
         
         Element fieldsElement = createElement(doc, enumElement, "fields");
         for (String field : enumAbout.getFields()) {
@@ -165,7 +165,6 @@ public class XMLGenerator {
     }
 
     private static void createFieldsXML(Object sourceAbout, Document doc, Element fieldsElement) {
-        // This method uses reflection or type-specific methods to get fields
         if (sourceAbout instanceof ClassAbout) {
             for (FieldAbout field : ((ClassAbout) sourceAbout).getFields()) {
                 createFieldXML(field, doc, fieldsElement);
@@ -178,7 +177,6 @@ public class XMLGenerator {
     }
 
     private static void createMethodsXML(Object sourceAbout, Document doc, Element methodsElement) {
-        // This method uses reflection or type-specific methods to get methods
         if (sourceAbout instanceof ClassAbout) {
             for (MethodAbout method : ((ClassAbout) sourceAbout).getMethods()) {
                 createMethodXML(method, doc, methodsElement);
@@ -193,44 +191,44 @@ public class XMLGenerator {
     private static void createFieldXML(FieldAbout field, Document doc, Element parentElement) {
         Element fieldElement = createElement(doc, parentElement, "field");
         
-        createTextElement(doc, fieldElement, "name", field.getName());
-        createTextElement(doc, fieldElement, "type", field.getType());
+        createTextElement(doc, fieldElement, "name", field.getFieldName());
+        createTextElement(doc, fieldElement, "type", field.getFieldType());
         createTextElement(doc, fieldElement, "modifier", String.valueOf(field.getModifier()));
     }
 
     private static void createMethodXML(MethodAbout method, Document doc, Element parentElement) {
         Element methodElement = createElement(doc, parentElement, "method");
         
-        createTextElement(doc, methodElement, "name", method.getName());
-        createTextElement(doc, methodElement, "returnType", method.getReturnType());
-        createTextElement(doc, methodElement, "modifier", String.valueOf(method.getModifier()));
+        createTextElement(doc, methodElement, "name", method.getMethodName());
+        createTextElement(doc, methodElement, "returnType", method.getOutputType());
+        createTextElement(doc, methodElement, "modifier", String.valueOf(method.getModifer()));
     }
 
     private static void createRelationshipsXML(ClassAbout classAbout, Document doc, Element parentElement) {
-        Element relationsElement = createElement(doc, parentElement, "relationships");
+        Element associationsElement = createElement(doc, parentElement, "relationships");
         
-        if (classAbout.getExtendedClass() != null) {
-            createTextElement(doc, relationsElement, "parent", classAbout.getExtendedClass());
+        if (classAbout.getSuperClass() != null) {
+            createTextElement(doc, associationsElement, "parent", classAbout.getSuperClass());
         }
         
-        for (RelationshipAbout usedClass : classAbout.getUsedClasses()) {
-            Element usedElement = createElement(doc, relationsElement, "uses");
-            usedElement.setAttribute("from", usedClass.getSimpleFrom());
-            usedElement.setAttribute("to", usedClass.getSimpleTo());
+        for (AssociationAbout dependecyAssociattion : classAbout.getDependencyAssociations()) {
+            Element usedElement = createElement(doc, associationsElement, "uses");
+            usedElement.setAttribute("sourceClass", dependecyAssociattion.getSourceClassName());
+            usedElement.setAttribute("targetClass", dependecyAssociattion.getTargetClassName());
         }
         
-        for (RelationshipAbout composedClass : classAbout.getComposedClasses()) {
-            Element compositionElement = createElement(doc, relationsElement, "composition");
-            compositionElement.setAttribute("from", composedClass.getSimpleFrom());
-            compositionElement.setAttribute("to", composedClass.getSimpleTo());
-            compositionElement.setAttribute("maxOccurs", composedClass.getMaxOccurs());
+        for (AssociationAbout compositionAssociation : classAbout.getCompositionAssociations()) {
+            Element compositionElement = createElement(doc, associationsElement, "composition");
+            compositionElement.setAttribute("sourcetClass", compositionAssociation.getSourceClassName());
+            compositionElement.setAttribute("targetClass", compositionAssociation.getTargetClassName());
+            compositionElement.setAttribute("upperBound", compositionAssociation.getUpperBound());
         }
         
-        for (RelationshipAbout aggregatedClass : classAbout.getAggregatedClasses()) {
-            Element aggregationElement = createElement(doc, relationsElement, "aggregation");
-            aggregationElement.setAttribute("from", aggregatedClass.getSimpleFrom());
-            aggregationElement.setAttribute("to", aggregatedClass.getSimpleTo());
-            aggregationElement.setAttribute("maxOccurs", aggregatedClass.getMaxOccurs());
+        for (AssociationAbout aggregationAssociation : classAbout.getAggregationAssociations()) {
+            Element aggregationElement = createElement(doc, associationsElement, "aggregation");
+            aggregationElement.setAttribute("sourceClass", aggregationAssociation.getSourceClassName());
+            aggregationElement.setAttribute("targetclass", aggregationAssociation.getTargetClassName());
+            aggregationElement.setAttribute("upperBound", aggregationAssociation.getUpperBound());
         }
     }
 
@@ -257,6 +255,4 @@ public class XMLGenerator {
         System.out.println("XML file saved to: " + file.getAbsolutePath());
     }
 
-    // Other methods from the original class would remain mostly unchanged
-    // Just apply similar refactoring principles
 }
