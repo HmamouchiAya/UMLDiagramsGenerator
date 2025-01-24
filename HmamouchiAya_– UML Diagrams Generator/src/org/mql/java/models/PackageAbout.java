@@ -1,19 +1,19 @@
 package org.mql.java.models;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
 public class PackageAbout {
-   private final String packageName;
+   private String packageName;
    private List<PackageAbout> Packages;
    private List<ClassAbout> classes;
    private List<InterfaceAbout> interfaces; 
    private List<AnnotationAbout> annotations;
    private List<EnumAbout> enums;
 
-   public PackageAbout() {
+
+public PackageAbout() {
        this.packageName = "";
        initializeLists();
    }
@@ -44,23 +44,23 @@ public class PackageAbout {
    }
 
    public List<PackageAbout> getPackages() {
-       return Collections.unmodifiableList(Packages);
+       return Packages;
    }
 
-   public List<ClassAbout> getClassDefinitions() {
-       return Collections.unmodifiableList(classes);
+   public List<ClassAbout> getClasses() {
+       return classes;
    }
 
-   public List<InterfaceAbout> getInterfaceDefinitions() {
-       return Collections.unmodifiableList(interfaces);
+   public List<InterfaceAbout> getInterfaces() {
+       return interfaces;
    }
 
-   public List<AnnotationAbout> getAnnotationDefinitions() {
-       return Collections.unmodifiableList(annotations);
+   public List<AnnotationAbout> getAnnotations() {
+       return annotations;
    }
 
-   public List<EnumAbout> getEnumDefinitions() {
-       return Collections.unmodifiableList(enums);
+   public List<EnumAbout> getEnums() {
+       return enums;
    }
 
    public void addPackage(PackageAbout Package) {
@@ -92,6 +92,9 @@ public class PackageAbout {
            this.enums.add(enumAbout);
        }
    }
+   public void setPackageName(String packageName) {
+	this.packageName = packageName;
+}
 
    public void setPackages(List<PackageAbout> Packages) {
        this.Packages = new Vector<>(Packages != null ? Packages : Collections.emptyList());
@@ -110,7 +113,7 @@ public class PackageAbout {
    }
 
    public void setEnums(List<EnumAbout> enums) {
-       this.enums = new ArrayList<>(enums != null ? enums : Collections.emptyList());
+       this.enums = new Vector<>(enums != null ? enums : Collections.emptyList());
    }
 
    @Override

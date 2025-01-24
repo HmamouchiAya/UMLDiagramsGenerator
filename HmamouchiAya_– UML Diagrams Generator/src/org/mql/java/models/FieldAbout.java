@@ -89,20 +89,20 @@ public class FieldAbout {
         this.fieldElement = fieldElement;
     }
 
-    public void setAttributeName(String attributeName) {
-        this.fieldName = attributeName;
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
     }
 
-    public void setAttributeType(String attributeType) {
-        this.fieldType = attributeType;
+    public void setFieldType(String fieldType) {
+        this.fieldType = fieldType;
     }
 
-    public void setShortTypeName(String shortTypeName) {
-        this.simpleTypeName = shortTypeName;
+    public void setSimpleTypeName(String simpleTypeName) {
+        this.simpleTypeName = simpleTypeName;
     }
 
-    public void setAccessLevel(char accessLevel) {
-        this.modifier = accessLevel;
+    public void setModifier(char modifier) {
+        this.modifier = modifier;
     }
 
     public void setUserDefined(boolean isUserDefined) {

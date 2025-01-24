@@ -19,7 +19,9 @@ public class ClassAbout {
     private List<AssociationAbout> aggregationAssociations;
     private List<InterfaceAbout> implementedInterfaces;
 
-    public ClassAbout() {
+
+
+	public ClassAbout() {
         initializeLists();
     }
 
@@ -176,19 +178,78 @@ public class ClassAbout {
         return !cls.isPrimitive() && !cls.getName().startsWith("java.lang");
     }
 
-    public String getSimpleName() { return simpleName; }
-    public String getName() { return name; }
-    public String getModifiers() { return modifiers; }
-    public String getSuperClass() { return superClass; }
-    public List<FieldAbout> getFields() { return fields; }
-    public List<MethodAbout> getMethods() { return methods; }
-    public List<AssociationAbout> getAssociations() { return associations; }
-    public List<AssociationAbout> getDependencyAssociations() { return dependencyAssociations; }
-    public List<AssociationAbout> getCompositionAssociations() { return compositionAssociations; }
-    public List<AssociationAbout> getAggregationAssociations() { return aggregationAssociations; }
-    public List<InterfaceAbout> getImplementedInterfaces() { return implementedInterfaces; }
+    public String getSimpleName() {
+    	return simpleName; 
+    }
+   
+	public String getName() {
+    	return name; 
+    }
+    public String getModifiers() {
+    	return modifiers;
+    }
+    public String getSuperClass() {
+    	return superClass;
+    }
+    public List<FieldAbout> getFields() {
+    	return fields; 
+    }
+    public List<MethodAbout> getMethods() {
+    	return methods; 
+    }
+    public List<AssociationAbout> getAssociations() { 
+    	return associations;
+    }
+    public List<AssociationAbout> getDependencyAssociations() { 
+    	return dependencyAssociations; 
+    }
+    public List<AssociationAbout> getCompositionAssociations() { 
+    	return compositionAssociations; 
+    }
+    public List<AssociationAbout> getAggregationAssociations() {
+    	return aggregationAssociations; 
+    }
+    public List<InterfaceAbout> getImplementedInterfaces() {
+    	return implementedInterfaces;
+    }
 
-    public void setName(String name) { this.name = name; }
-    public void setModifiers(String modifiers) { this.modifiers = modifiers; }
-    public void setSuperClass(String superClass) { this.superClass = superClass; }
+    public void setName(String name) { 
+    	this.name = name;
+    }
+    public void setModifiers(String modifiers) { 
+    	this.modifiers = modifiers; 
+    }
+    public void setSuperClass(String superClass) {
+    	this.superClass = superClass;
+    }
+    public void setSimpleName(String simpleName) {
+		this.simpleName = simpleName;
+	}
+
+	public void setFields(List<FieldAbout> fields) {
+		this.fields = fields;
+	}
+
+	public void setMethods(List<MethodAbout> methods) {
+		this.methods = methods;
+	}
+
+	public void setAssociations(List<AssociationAbout> associations) {
+		this.associations = associations;
+	}
+
+	public void setDependencyAssociations(List<AssociationAbout> dependencyAssociations) {
+		this.dependencyAssociations = dependencyAssociations;
+	}
+
+	public void setCompositionAssociations(List<AssociationAbout> compositionAssociations) {
+		this.compositionAssociations = compositionAssociations;
+	}
+
+	public void setAggregationAssociations(List<AssociationAbout> aggregationAssociations) {
+		this.aggregationAssociations = aggregationAssociations;
+	}
+	 public void setImplementedInterfaces(List<InterfaceAbout> implementedInterfaces) {
+			this.implementedInterfaces = implementedInterfaces;
+		}
 }

@@ -39,7 +39,7 @@ public class AnnotationAbout {
         return policy;
     }
 
-    public boolean hasInheritance() {
+    public boolean inheritanceStatus() {
         return inheritanceStatus;
     }
 
